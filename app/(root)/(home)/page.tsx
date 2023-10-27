@@ -5,63 +5,17 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
+import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 
-const questions = [
-  {
-    _id: "1",
-    title: "Redux Toolkit Not Updating State as Expected",
-    tags: [
-      {
-        _id: "1",
-        name: "python",
-      },
-      {
-        _id: "2",
-        name: "SQL",
-      },
-    ],
-    author: {
-      _id: "3",
-      name: "John Doe",
-      picture: "profile.jpg",
-    },
-    upvotes: 10,
-    views: 10,
-    answer: [],
-    createdAt: new Date("2022-01-01T00:00:00Z"),
-  },
-  {
-    _id: "2",
-    title: "Redux Toolkit Not Updating State as Expected",
-    tags: [
-      {
-        _id: "1",
-        name: "python",
-      },
-      {
-        _id: "2",
-        name: "SQL",
-      },
-    ],
-    author: {
-      _id: "3",
-      name: "John Doe",
-      picture: "profile.jpg",
-    },
-    upvotes: 10,
-    views: 10,
-    answer: [],
-    createdAt: new Date("2022-01-01T00:00:00Z"),
-  },
-  // Add more questions here...
-];
+export default async function Home() {
+  const result = await getQuestions({});
 
-export default function Home() {
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
+
         <Link href="/ask-question" className="flex justify-end max-sm:w-full">
           <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
             Ask a Question
@@ -77,19 +31,19 @@ export default function Home() {
           placeholder="Search for questions"
           otherClasses="flex-1"
         />
+
         <Filter
           filters={HomePageFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
-          containerCLasses="hidden max-md:flex"
+          containerClasses="hidden max-md:flex"
         />
       </div>
 
       <HomeFIlters />
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {/* {Looping Question} */}
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {result.questions.length > 0 ? (
+          result.questions.map((question) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
@@ -98,18 +52,16 @@ export default function Home() {
               author={question.author}
               upvotes={question.upvotes}
               views={question.views}
-              answer={question.answer}
+              answers={question.answers}
               createdAt={question.createdAt}
             />
           ))
         ) : (
           <NoResult
-            title="There's no question to show"
-            description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
-          discussion. our query could be the next big thing others learn from. Get
-          involved! 💡"
-            LinkUrl="/ask-question"
-            LinkTitle="Ask a Question"
+            title="There’s no question to show"
+            description="Be the first to break the silence! 🚀 Ask a Question and kickstart the discussion. our query could be the next big thing others learn from. Get involved! 💡"
+            link="/ask-question"
+            linkTitle="Ask a Question"
           />
         )}
       </div>

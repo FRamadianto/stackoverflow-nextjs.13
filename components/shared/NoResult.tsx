@@ -6,10 +6,10 @@ import { Button } from "../ui/button";
 interface Props {
   title: string;
   description: string;
-  LinkUrl: string;
-  LinkTitle: string;
+  link: string;
+  linkTitle: string;
 }
-const NoResult = ({ title, description, LinkUrl, LinkTitle }: Props) => {
+const NoResult = ({ title, description, link, linkTitle }: Props) => {
   return (
     <div className="mt-10 flex w-full flex-col items-center justify-center">
       <Image
@@ -30,9 +30,9 @@ const NoResult = ({ title, description, LinkUrl, LinkTitle }: Props) => {
       <p className="body-regular text-dark500_light700 my-3.5 max-w-md text-center">
         {description}
       </p>
-      <Link href={LinkUrl}>
+      <Link href={link}>
         <Button className="paragraph-medium primary-gradient min-h-[46px] rounded-lg bg-primary-500 px-4 py-3 text-light-900 hover:bg-primary-500 dark:bg-primary-500 dark:text-light-900">
-          {LinkTitle}
+          {linkTitle}
         </Button>
       </Link>
     </div>

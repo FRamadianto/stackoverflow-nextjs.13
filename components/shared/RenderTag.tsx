@@ -4,18 +4,18 @@ import { Badge } from "@/components/ui/badge";
 
 interface Props {
   _id: string;
-  title: string;
+  name: string;
   totalQuestion?: number;
   showCount?: boolean;
 }
-const RenderTag = ({ _id, title, totalQuestion, showCount }: Props) => {
+const RenderTag = ({ _id, name, totalQuestion, showCount }: Props) => {
   return (
     <Link
       href={`/tags/${_id}`}
       className="flex cursor-pointer justify-between gap-2"
     >
       <Badge className="subtle-medium background-light800_dark300 text-light400_light500 rounded-md border-none px-4 py-2 uppercase">
-        {title}
+        {name}
       </Badge>
 
       {showCount && (
