@@ -17,11 +17,11 @@ const RIghtSideBar = () => {
   ];
 
   const popularTags = [
-    { _id: "1", title: "React", totalQuestion: 10 },
-    { _id: "2", title: "NextJS", totalQuestion: 5 },
-    { _id: "3", title: "VueJS", totalQuestion: 4 },
-    { _id: "4", title: "Fluter", totalQuestion: 16 },
-    { _id: "5", title: "NodeJS", totalQuestion: 8 },
+    { _id: "1", name: "React", totalQuestion: 10 },
+    { _id: "2", name: "NextJS", totalQuestion: 5 },
+    { _id: "3", name: "VueJS", totalQuestion: 4 },
+    { _id: "4", name: "Fluter", totalQuestion: 16 },
+    { _id: "5", name: "NodeJS", totalQuestion: 8 },
   ];
   return (
     <section className="background-light900_dark200 light-border custom-scrollbar sticky right-0 top-0 flex h-screen flex-col overflow-y-auto border-l p-6 pt-36 shadow-light-300 dark:shadow-none max-xl:hidden lg:w-[350px]">
@@ -55,7 +55,7 @@ const RIghtSideBar = () => {
             <RenderTag
               key={tag._id}
               _id={tag._id}
-              title={tag.title}
+              name={tag.name}
               totalQuestion={tag.totalQuestion}
               showCount
             />
