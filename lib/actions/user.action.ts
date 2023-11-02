@@ -2,7 +2,7 @@
 
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose"
-import { CreateUserParams, DeleteUserParams, UpdateUserParams } from "./shared.types";
+import { CreateUserParams, DeleteUserParams, GetAllUsersParams, UpdateUserParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 
@@ -82,3 +82,26 @@ export async function deleteUser(params: DeleteUserParams) {
     throw error;
   }
 }
+
+export async function getAllUsers(params: GetAllUsersParams) {
+  try {
+    connectToDatabase()
+
+    // const { page = 1, pageSize = 20, filter, searchQuery } = params
+
+    const user = await User.find({})
+    .sort({ createdAt: -1 })
+    return { user };
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+// export async function getAllUsers(params: GetAllUsersParams) {
+//   try {
+//     connectToDatabase()
+//   } catch (error) {
+//     console.log(error)
+//     throw error
+//   }
+// }
