@@ -2,35 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import RenderTag from "./RenderTag";
+import { getHotQuestions } from "@/lib/actions/question.action";
+import { getTopPopularTags } from "@/lib/actions/tag.action";
 
-const RIghtSideBar = () => {
-  const hotQiestion = [
-    {
-      _id: "1",
-      title:
-        "Best practices for data fetching in a Next.js application with Server-S_ide Rendering (SSR)?",
-    },
-    { _id: "2", title: "Can I get the course for free?" },
-    { _id: "3", title: "Redux Toolkit Not Updating State as Expected" },
-    { _id: "4", title: "Async/Await Function Not Handling Errors Properly" },
-    { _id: "5", title: "How do I use express as a custom server in NextJS?" },
-  ];
+const RIghtSideBar = async () => {
+  const hotQuestion = await getHotQuestions();
+  const popularTags = await getTopPopularTags();
 
-  const popularTags = [
-    { _id: "1", name: "React", totalQuestion: 10 },
-    { _id: "2", name: "NextJS", totalQuestion: 5 },
-    { _id: "3", name: "VueJS", totalQuestion: 4 },
-    { _id: "4", name: "Fluter", totalQuestion: 16 },
-    { _id: "5", name: "NodeJS", totalQuestion: 8 },
-  ];
   return (
     <section className="background-light900_dark200 light-border custom-scrollbar sticky right-0 top-0 flex h-screen flex-col overflow-y-auto border-l p-6 pt-36 shadow-light-300 dark:shadow-none max-xl:hidden lg:w-[350px]">
       <div>
         <h3 className="h3-bold text-dark200_light900">Top Question</h3>
         <div className="mt-7 flex w-full flex-col gap-[30px]">
-          {hotQiestion.map((question) => (
+          {hotQuestion.map((question) => (
             <Link
-              href={`/questions/${question._id}`}
+              href={`/question/${question._id}`}
               key={question._id}
               className="flex cursor-pointer items-center justify-between gap-7"
             >
@@ -56,7 +42,7 @@ const RIghtSideBar = () => {
               key={tag._id}
               _id={tag._id}
               name={tag.name}
-              totalQuestion={tag.totalQuestion}
+              totalQuestion={tag.numberOfQuestions}
               showCount
             />
           ))}
