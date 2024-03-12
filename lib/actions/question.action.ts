@@ -14,16 +14,17 @@ export async function getQuestions(params: GetQuestionsParams) {
   try {
     connectToDatabase();
 
-    const  {searchQuery, filter, page = 1, pageSize = 20} = params;
+    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
 
-    const skipAmount = (page - 1) * pageSize
+    // Calculcate the number of posts to skip based on the page number and page size
+    const skipAmount = (page - 1) * pageSize;
 
-    const query: FilterQuery<typeof Question> = {}
+    const query: FilterQuery<typeof Question> = {};
 
-    if (searchQuery) {
+    if(searchQuery) {
       query.$or = [
-        {title: { $regex: new RegExp(searchQuery, 'i') }},
-        {content: { $regex: new RegExp(searchQuery, 'i') }}
+        { title: { $regex: new RegExp(searchQuery, "i")}},
+        { content: { $regex: new RegExp(searchQuery, "i")}},
       ]
     }
 
@@ -50,9 +51,9 @@ export async function getQuestions(params: GetQuestionsParams) {
       .limit(pageSize)
       .sort(sortOptions)
 
-      const totalQuestions = await Question.countDocuments(query)
+    const totalQuestions = await Question.countDocuments(query);
 
-      const isNext = totalQuestions > skipAmount + questions.length
+    const isNext = totalQuestions > skipAmount + questions.length;
 
     return { questions, isNext };
   } catch (error) {
@@ -92,12 +93,19 @@ export async function createQuestion(params: CreateQuestionParams) {
     });
 
     // Create an interaction record for the user's ask_question action
-    
+    await Interaction.create({
+      user: author,
+      action: "ask_question",
+      question: question._id,
+      tags: tagDocuments,
+    })
+
     // Increment author's reputation by +5 for creating a question
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 5 }})
 
     revalidatePath(path)
   } catch (error) {
-    
+    console.log(error);
   }
 }
 
@@ -143,7 +151,15 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
       throw new Error("Question not found");
     }
 
-    // Increment author's reputation
+    // Increment author's reputation by +1/-1 for upvoting/revoking an upvote to the question
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasupVoted ? -1 : 1}
+    })
+
+    // Increment author's reputation by +10/-10 for recieving an upvote/downvote to the question
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { reputation: hasupVoted ? -10 : 10}
+    })
 
     revalidatePath(path);
   } catch (error) {
@@ -178,6 +194,13 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
     }
 
     // Increment author's reputation
+    await User.findByIdAndUpdate(userId, { 
+      $inc: { reputation: hasdownVoted ? -2 : 2 }
+    })
+
+    await User.findByIdAndUpdate(question.author, { 
+      $inc: { reputation: hasdownVoted ? -10 : 10 }
+    })
 
     revalidatePath(path);
   } catch (error) {
