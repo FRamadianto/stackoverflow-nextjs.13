@@ -67,8 +67,6 @@ const Answer = ({ question, questionId, authorId }: Props) => {
     if (!authorId) return;
 
     setIsSubmittingAI(true);
-    console.log(question);
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
